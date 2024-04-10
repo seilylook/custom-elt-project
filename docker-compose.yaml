@@ -1,0 +1,50 @@
+# 이 docker compose에서는 두개의 데이터베이스를 사용한다.
+# 1. 원본 데이터를 가진 db
+# 2. 가공한 데이터를 저장할 db
+
+version: "3"
+
+services:
+  source_postgres:
+    image: postgres:latest
+    ports:
+      - "5433:5432"
+    networks:
+      - elt_network
+    environment:
+      POSTGRES_DB: source_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - ./source_db_init/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  destination_postgres:
+    image: postgres:latest
+    ports:
+      - "5434:5432"
+    networks:
+      - elt_network
+    environment:
+      POSTGRES_DB: destination_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+
+      # 여기는 volume을 지정하지 않는다.
+      # why? 매 테스트 요청마다 data를 저장해주지 않기 위해서다.
+
+  elt_script:
+    build:
+      context: ./elt_script # Directory containing the Dockerfile and elt_script.py
+      dockerfile: Dockerfile # Name of the Dockerfile, if it's something other than "Dockerfile", specify here
+    command: ["python", "elt_script.py"]
+    networks:
+      - elt_network
+    # source, destination db가 초기화되기 전까지는 실행되면 안된다.
+    # 그렇기에 depends_on으로 설정해준다.
+    depends_on:
+      - source_postgres
+      - destination_postgres
+
+networks:
+  elt_network:
+    driver: bridge
