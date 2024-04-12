@@ -1,0 +1,29 @@
+[0m13:50:06.407457 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x107770500>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1077729f0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1077726f0>]}
+
+
+============================== 13:50:06.409143 | 51e8a544-8931-40e2-9d1c-71a5a9f1a021 ==============================
+[0m13:50:06.409143 [info ] [MainThread]: Running with dbt=1.7.11
+[0m13:50:06.409422 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'write_json': 'True', 'log_cache_events': 'False', 'partial_parse': 'True', 'cache_selected_only': 'False', 'warn_error': 'None', 'fail_fast': 'False', 'profiles_dir': '/Users/seilylook/.dbt', 'log_path': 'logs', 'debug': 'False', 'version_check': 'True', 'use_colors': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'quiet': 'False', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'introspect': 'True', 'invocation_command': 'dbt init', 'static_parser': 'True', 'target_path': 'None', 'log_format': 'default', 'send_anonymous_usage_stats': 'True'}
+[0m13:50:23.229899 [debug] [MainThread]: Starter project path: /opt/homebrew/lib/python3.12/site-packages/dbt/include/starter_project
+[0m13:50:23.235408 [info ] [MainThread]: 
+Your new dbt project "custom_postgres" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m13:50:23.235862 [info ] [MainThread]: Setting up your profile.
+[0m13:53:25.809752 [info ] [MainThread]: Profile custom_postgres written to /Users/seilylook/.dbt/profiles.yml using target's profile_template.yml and your supplied values. Run 'dbt debug' to validate the connection.
+[0m13:53:25.813371 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 199.41673, "process_user_time": 0.670618, "process_kernel_time": 0.072009, "process_mem_max_rss": "96370688", "process_in_blocks": "0", "process_out_blocks": "0"}
+[0m13:53:25.814763 [debug] [MainThread]: Command `dbt init` succeeded at 13:53:25.814482 after 199.42 seconds
+[0m13:53:25.815483 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x10226ad20>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1075ddf10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1077f10d0>]}
+[0m13:53:25.816168 [debug] [MainThread]: Flushing usage events

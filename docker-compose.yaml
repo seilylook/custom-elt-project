@@ -2,10 +2,6 @@ version: "3"
 
 services:
   source_postgres:
-    # 여기때문에 계속 동작하지 않았다.
-    # 처음에는 postgres:latest
-    # pg_dump와 현재 버전이 안 맞다고 docker desktop를 확인하고
-    # 버전을 특정 버전으로 지정해 주니 해결됐다.
     image: postgres:15.5
     ports:
       - "5433:5432"
@@ -24,28 +20,54 @@ services:
       - "5434:5432"
     networks:
       - elt_network
+    depends_on:
+      - source_postgres
     environment:
       POSTGRES_DB: destination_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: secret
+    # volumes:
+    #   - destination_db_data:/var/lib/postgresql/data
 
-    # 결과를 저장할 destination db는
-    # 매 test마다 데이터를 저장하면 과부하가 생기기 때문에
-    # volume을 지정해주지 않는다.
-
-  elt_scripts:
+  elt_script:
     build:
       context: ./elt_script # Directory containing the Dockerfile and elt_script.py
       dockerfile: Dockerfile # Name of the Dockerfile, if it's something other than "Dockerfile", specify here
     command: ["python", "elt_script.py"]
     networks:
       - elt_network
-
-    # 스크립트를 실행하기 전에, source, destination db를 연결해야 되기 때문에 depends로 설정.
     depends_on:
       - source_postgres
       - destination_postgres
 
+  dbt:
+    image: ghcr.io/dbt-labs/dbt-postgres:1.4.11
+    command:
+      [
+        "run",
+        "--profiles-dir",
+        "/root",
+        "--project-dir",
+        "/dbt",
+        "--full-refresh",
+      ]
+    networks:
+      - elt_network
+    volumes:
+      - ./custom_postgres:/dbt
+      - ~/.dbt:/root
+    depends_on:
+      elt_script:
+        condition: service_completed_successfully
+    environment:
+      DBT_PROFILE: default
+      DBT_TARGET: dev
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
 networks:
   elt_network:
     driver: bridge
+
+volumes:
+  destination_db_data:
